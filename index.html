@@ -378,7 +378,13 @@ a{color:inherit}
 /* the doily is 50.23% of this box, the lace frame 65.477% of section 2's, so
    1.3035x section 2's width puts the two focal shapes at the same size */
 .s3-wrap{width:min(100%,1304px)}
-@media (min-width:1024px){.s3-wrap{width:min(100%,95vw,1304px)}}
+/* desktop: 1.114x section 2's width puts the doily (58.77% of this box) at the same
+   size as the lace frame (65.477% of section 2's). The doily also overhangs the
+   box top by 7.17% of its height, so that much extra margin keeps the visible gap
+   to section 2 equal to the other joins. */
+@media (min-width:1024px){
+  .s3-wrap{width:min(100%,81.3vw,1114px);margin-top:calc(min(81.3vw,1114px)*.059)}
+}
 .s3{position:relative;width:100%;aspect-ratio:1736/1171;direction:ltr}
 .s3-lay{position:absolute;height:auto;display:block}
 
