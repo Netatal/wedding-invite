@@ -205,7 +205,8 @@ a{color:inherit}
 /* on wide screens the scene tracks the reference: ~50% of the viewport,
    with a vh guard so a short window does not force a long scroll.
    470px at the 940px breakpoint, so the two tiers meet without a jump. */
-@media (min-width:940px){.wrap{width:min(50vw,940px,92vh)}}
+/* the last term leaves a strip at the bottom of the screen for the scroll cue */
+@media (min-width:940px){.wrap{width:min(50vw,940px,calc((100svh - 84px)*.839))}}
 .below{padding:0 20px}
 
 /* ---- the layered scene ---- */
@@ -257,7 +258,7 @@ a{color:inherit}
 .ly-vinyl.playing .disc{animation-play-state:running}
 @keyframes spin{to{transform:rotate(360deg)}}
 .tap{position:absolute;left:-30%;top:-30%;width:160%;height:160%;overflow:visible;pointer-events:none;transform:rotate(-16deg)}
-.tap text{font-family:"Playfair Display SC",var(--display);font-size:14px;letter-spacing:1.1px;fill:#FFFFFF}
+.tap text{font-family:"Playfair Display SC",var(--display);font-size:14px;letter-spacing:1.1px;fill:var(--navy)}
 
 /* ================= section 2 — the formal invitation ================= */
 #invite2{
@@ -354,6 +355,23 @@ a{color:inherit}
   animation-delay:calc(var(--i,0)*38ms + 420ms)}
 @keyframes s2in{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
 @keyframes wordin{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+
+/* ---- scroll cue: shown on the opened scene until the first scroll ----
+   script caption + chevron */
+.scroll-cue{
+  position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom));z-index:20;
+  translate:-50% 0;display:flex;flex-direction:column;align-items:center;gap:2px;
+  color:rgba(255,243,236,.86);pointer-events:none;opacity:0;
+  filter:drop-shadow(0 0 5px rgba(72,0,32,.9)) drop-shadow(0 0 14px rgba(72,0,32,.65));   /* stays legible over the pale envelope */
+  transition:opacity .7s cubic-bezier(.22,1,.36,1)}
+.scroll-cue.is-on{opacity:1}
+.sc-text{font-family:"Luxurious Script",var(--script),cursive;font-size:30px;line-height:1;direction:ltr;
+  text-shadow:0 1px 10px rgba(72,0,32,.7)}
+.sc-chev{display:block;width:22px;height:12px;overflow:visible}
+@media (prefers-reduced-motion:no-preference){
+  .scroll-cue.is-on .sc-chev{animation:cue-bob 1.9s cubic-bezier(.45,0,.25,1) infinite}
+}
+@keyframes cue-bob{0%,100%{translate:0 0;opacity:.45}50%{translate:0 6px;opacity:1}}
 
 /* ---- below the scene ---- */
 .when-line{
@@ -638,6 +656,10 @@ a,button,input,textarea,label,[role=button],select,option{cursor:inherit!importa
 
   <!-- ======== screen 2 ======== -->
   <section id="invite" hidden>
+    <div class="scroll-cue" aria-hidden="true">
+      <span class="sc-text">scroll down</span>
+      <svg class="sc-chev" viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l9 8 9-8"/></svg>
+    </div>
     <div class="first">
     <div class="wrap">
 
@@ -751,6 +773,12 @@ a,button,input,textarea,label,[role=button],select,option{cursor:inherit!importa
   var scene  = document.getElementById('scene');
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* scroll cue: appears once the envelope has finished opening, hides on scroll */
+  var cue = document.querySelector('.scroll-cue'), cueReady = false;
+  function cueUpdate(){ if (cue) cue.classList.toggle('is-on', cueReady && window.scrollY < 30); }
+  function cueShow(){ setTimeout(function(){ cueReady = true; cueUpdate(); }, 700); }
+  window.addEventListener('scroll', cueUpdate, {passive:true});
+
   function open(){
     if(env.classList.contains('is-open')) return;
     env.classList.add('is-open');
@@ -761,7 +789,7 @@ a,button,input,textarea,label,[role=button],select,option{cursor:inherit!importa
 
     if (reduce){
       stage.hidden = true; invite.hidden = false; window.scrollTo(0,0);
-      if (window.revealS2) window.revealS2();
+      if (window.revealS2) window.revealS2(); cueShow();
       return;
     }
 
@@ -806,12 +834,13 @@ a,button,input,textarea,label,[role=button],select,option{cursor:inherit!importa
         stage.hidden = true;
         stage.classList.remove('is-lifting', 'is-leaving');
         if (wrap){ wrap.style.transition = ''; wrap.style.transform = ''; wrap.style.transformOrigin = ''; }
-        if (window.revealS2) window.revealS2();
+        if (window.revealS2) window.revealS2(); cueShow();
       }, 1400);
     }, 760);
   }
 
   function close(){
+    cueReady = false; cueUpdate();
     song.pause(); setPlaying(false);
     invite.hidden = true;
     stage.hidden = false;
