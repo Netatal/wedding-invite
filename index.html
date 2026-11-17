@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="he">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>William & Neta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italianno&family=Bellefair&family=Assistant:wght@200;300;400;600&display=swap">
+<style>
+@font-face{
+  font-family:"Gveret Levin";
+  src:url("fonts/GveretLevin-Regular.ttf") format("truetype");
+  font-weight:400;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:"Playfair Display SC";
+  src:url("fonts/PlayfairDisplaySC-Regular.ttf") format("truetype");
+  font-weight:400;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:"Luxurious Script";
+  src:url("fonts/LuxuriousScript-Regular.ttf") format("truetype");
+  font-weight:400;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:"Frank Ruhl Libre";
+  src:url("fonts/FrankRuhlLibre-Light.ttf") format("truetype");
+  font-weight:300;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:"Frank Ruhl Libre";
+  src:url("fonts/FrankRuhlLibre-Medium.ttf") format("truetype");
+  font-weight:500;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:"Frank Ruhl Libre";
+  src:url("fonts/FrankRuhlLibre-Regular.ttf") format("truetype");
+  font-weight:400;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:"Libertinus Serif";
+  src:url("fonts/LibertinusSerif-Regular.ttf") format("truetype");
+  font-weight:400;font-style:normal;font-display:swap;
+}
+:root{
+  --paper:#FCFCFA;
+  --ivory:#F5F4EF;
+  --ivory-deep:#EAE9E2;
+  --rule:#D8DCE2;
+  --blue:#BCD0DE;
+  --blue-mid:#A9C0D2;
+  --blue-deep:#8FA9BD;
+  --navy:#22406B;
+  --navy-mid:#355A8C;
+  --ink:#1E2B3C;
+  --muted:#73839A;
+  --wax:#9FBACE;
+  --wax-deep:#6E91AC;
+  --accent:#2A4A77;
+
+  /* the wine ground, shared by the envelope, the scene and the invitation */
+  --wine:#480020;
+
+  /* one gap between consecutive compositions; each section contributes half */
+  --sgap:clamp(48px,7vw,104px);
+
+  --script:"Italianno","Snell Roundhand",cursive;
+  --display:"Bellefair","Didot",Georgia,serif;
+  --heb:"Frank Ruhl Libre","Libertinus Serif",Georgia,serif;
+  --ui:"Assistant","Segoe UI",system-ui,sans-serif;
+
+  --fiber:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='pf'><feTurbulence type='fractalNoise' baseFrequency='0.042' numOctaves='5' seed='4' result='t'/><feDiffuseLighting in='t' lighting-color='white' surfaceScale='2.6'><feDistantLight azimuth='235' elevation='60'/></feDiffuseLighting></filter><rect width='320' height='320' filter='url(%23pf)'/></svg>");
+  --grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='150' height='150' filter='url(%23n)' opacity='0.05'/></svg>");
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{min-height:100%}
+html{overflow-x:clip}
+body{
+  margin:0;overflow-x:hidden;background:var(--wine);color:var(--ink);
+  font-family:var(--ui);-webkit-font-smoothing:antialiased;
+}
+img{display:block;max-width:100%}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:2px solid rgba(255,243,236,.85);outline-offset:4px;border-radius:2px}
+
+/* ================= screen 1 — the sealed envelope ================= */
+
+#stage{
+  min-height:100svh;overflow-x:clip;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:32px;padding:48px 20px;text-align:center;
+  background:var(--grain),var(--wine);
+}
+/* the heading and the prompt leave the moment the envelope is tapped,
+   well before the contents rise out of it */
+@media (prefers-reduced-motion:no-preference){
+  #stage.is-opening .stage-hello,#stage.is-opening .open-cta{
+    animation:hello-out .38s cubic-bezier(.4,0,.6,1) both;pointer-events:none}
+}
+@keyframes hello-out{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-8px)}}
+.stage-hello{
+  margin:0;font-family:"Luxurious Script",var(--script),cursive;font-weight:400;
+  font-size:clamp(44px,13vw,60px);line-height:1.05;
+  color:rgba(255,243,236,.92);direction:ltr;
+}
+@media (min-width:940px){.stage-hello{font-size:clamp(56px,5vw,84px)}}
+@media (prefers-reduced-motion:no-preference){
+  .stage-hello{animation:cdin 1.1s cubic-bezier(.22,1,.36,1) .15s both}
+}
+.env-wrap{width:min(330px,84vw)}
+@media (min-width:940px){.env-wrap{width:min(35vw,660px,65vh)}}
+.env-stage{position:relative;width:100%}
+.envelope{
+  position:relative;width:100%;aspect-ratio:769/516;z-index:2;
+  border:0;padding:0;display:block;background:none;
+  perspective:1500px;
+  transition:transform .5s cubic-bezier(.3,.8,.4,1);
+}
+.envelope:hover{transform:translateY(-3px)}
+.e-layer{position:absolute;left:0;right:0;top:-68.35%}
+.e-layer img{width:100%;height:auto}
+.e-body{z-index:1;clip-path:polygon(0 40.6%,100% 40.6%,100% 100%,0 100%)}
+.e-flap{
+  z-index:3;clip-path:polygon(0 0,100% 0,100% 40.6%,0 40.6%);
+  transform-origin:50% 40.6%;transform:rotateX(180deg);
+  transition:transform 1.15s cubic-bezier(.45,.05,.2,1),z-index 0s .6s;
+  will-change:transform;
+}
+.e-seal{
+  position:absolute;left:50%;top:62%;width:18%;height:auto;z-index:4;
+  transform:translate(-50%,-50%);
+  filter:drop-shadow(0 3px 5px rgba(46,62,84,.3));
+  transition:transform .5s ease,opacity .5s ease;
+}
+.envelope.is-open{pointer-events:none}
+.envelope.is-open .e-flap{transform:rotateX(0deg);z-index:0}
+.envelope.is-open .e-seal{opacity:0;transform:translate(-50%,-50%) scale(.55)}
+
+.e-fl{
+  position:absolute;height:auto;pointer-events:none;z-index:6;
+  filter:drop-shadow(0 7px 11px rgba(46,62,84,.15));
+}
+.e-fl-tulips{left:71%;top:29%;width:44%;transform:rotate(52deg);z-index:3}
+.e-fl-peony {left:-12%;top:50%;width:34%;z-index:3}
+
+.open-cta{
+  font-family:var(--heb);font-size:17px;font-weight:500;letter-spacing:.06em;
+  color:rgba(255,243,236,.74);direction:rtl;animation:pulse 2.6s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+#stage.is-lifting{position:fixed;inset:0;z-index:50;pointer-events:none}
+#stage.is-leaving{opacity:0;transition:opacity .7s ease}
+
+/* the contents sit down inside the envelope, hidden behind the pocket, and
+   lift out as the scene grows. The pocket and the envelope back stay put. */
+.ly-pa,.ly-pb,.ly-card,.ly-rf,.ly-vinyl{
+  transition:transform 1.3s cubic-bezier(.3,.7,.1,1);
+}
+/* measured: each layer's own height differs, so an equal % tucks them unequally.
+   These put every top at roughly the pocket line (63.8% of the scene). */
+.scene.emerge .ly-card {transform:translateY(60%)}   /* top 21.5%, tall  */
+.scene.emerge .ly-pa   {transform:translateY(95%)}   /* top  8.7%, deepest */
+.scene.emerge .ly-pb   {transform:translateY(55%)}   /* top 33.5%        */
+.scene.emerge .ly-rf   {transform:translateY(22%)}   /* top 58.5%, already low */
+.scene.emerge .ly-vinyl{transform:translateY(12%)}   /* top 63.5%, at the line */
+.ly-card {transition-delay:.06s}
+.ly-pa   {transition-delay:.16s}
+.ly-pb   {transition-delay:.24s}
+.ly-rf   {transition-delay:.36s}
+.ly-vinyl{transition-delay:.44s}
+@media (prefers-reduced-motion:reduce){
+  .ly-pa,.ly-pb,.ly-card,.ly-rf,.ly-vinyl{transition:none;transform:none}
+}
+
+/* ================= screen 2 — the opened invitation ================= */
+
+#invite{
+  direction:rtl;min-height:100svh;padding:14px 0 0;
+  background:var(--grain),var(--wine);
+}
+.wrap{width:min(470px,100%);margin:0 auto calc(var(--sgap)/2)}
+/* on wide screens the scene tracks the reference: ~50% of the viewport,
+   with a vh guard so a short window does not force a long scroll.
+   470px at the 940px breakpoint, so the two tiers meet without a jump. */
+@media (min-width:940px){.wrap{width:min(50vw,940px,92vh)}}
+.below{padding:0 20px}
+
+/* ---- the layered scene ---- */
+.scene{
+  position:relative;width:100%;
+  aspect-ratio:770/918;
+  direction:ltr;
+}
+/* scroll parallax on --py */
+.ly{position:absolute;
+    translate:0 var(--py,0px)}
+.scene.is-in{animation:scene-fade .55s ease both}
+.scene.is-in .ly{animation:var(--anim,settle) .9s cubic-bezier(.16,1,.3,1) var(--d,0s) both}
+@keyframes scene-fade{from{opacity:0}to{opacity:1}}
+.ly img{width:100%;height:auto;will-change:transform}
+
+.ly-back {left:0;      top:0;      width:100%;  z-index:1; --anim:settle-back; --depth:.12}
+.ly-pa   {left:18.64%; top:7.89%;  width:39.95%;z-index:2; --d:.14s; --depth:.45}
+.ly-pb   {left:18.64%; top:33.0%;  width:46.71%;z-index:3; --d:.22s; --depth:.55}
+.ly-card {left:49.5%;  top:20.5%;  width:42.5%; z-index:4; --d:.06s; --depth:.65}
+.ly-pocket{left:0;      top:0;      width:100%;  z-index:5; --anim:settle-back; --depth:.12;   /* same sheet as .ly-back */
+           clip-path:polygon(5% 87%, 43.75% 63.83%, 59.06% 63.83%, 94% 87.5%, 94% 95%, 5% 95%)}
+.ly-rf   {left:24.35%; top:58.84%; width:42.33%;z-index:6; --d:.30s; --anim:bloom; --depth:.85}
+.ly-vinyl{left:34.48%; top:64.06%; width:24.22%;z-index:7; --d:.36s; --anim:drop-in; padding:0; --depth:1}
+
+@keyframes settle{from{opacity:0;transform:translateY(9%)}to{opacity:1;transform:none}}
+@keyframes settle-back{from{transform:scale(.985)}to{transform:none}}
+@keyframes bloom{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+@keyframes drop-in{from{opacity:0;transform:translateY(16%) rotate(-22deg)}to{opacity:1;transform:none}}
+
+/* ---- idle motion: slow, offset phases so nothing marches in step ---- */
+@media (prefers-reduced-motion:no-preference){
+  .env-stage{animation:breathe 7.5s ease-in-out infinite}
+  .e-fl-peony {animation:sway-a 8.5s ease-in-out infinite}
+  .e-fl-tulips{animation:sway-b 9.5s ease-in-out -3s infinite}
+  .ly-pa   img{animation:drift   11s ease-in-out infinite}
+  .ly-pb   img{animation:drift   13s ease-in-out -4s infinite}
+  .ly-card img{animation:drift-s 15s ease-in-out -7s infinite}
+  .ly-rf   img{animation:drift   12s ease-in-out -2s infinite}
+}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.006)}}
+@keyframes sway-a{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-4px) rotate(-.9deg)}}
+@keyframes sway-b{0%,100%{transform:rotate(52deg) translateY(0)}50%{transform:rotate(53.4deg) translateY(-5px)}}
+@keyframes drift{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-3px) rotate(.25deg)}}
+@keyframes drift-s{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+
+/* the record */
+.ly-vinyl .disc{animation:spin 3.4s linear infinite;animation-play-state:paused}
+.ly-vinyl.playing .disc{animation-play-state:running}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tap{position:absolute;left:-30%;top:-30%;width:160%;height:160%;overflow:visible;pointer-events:none;transform:rotate(-16deg)}
+.tap text{font-family:"Playfair Display SC",var(--display);font-size:14px;letter-spacing:1.1px;fill:#FFFFFF}
+
+/* ================= section 2 — the formal invitation ================= */
+#invite2{
+  direction:rtl;background:var(--grain),var(--wine);   /* same grain as the
+     sections above, or the seam between them shows */
+  padding:calc(var(--sgap)/2) clamp(8px,2vw,24px);
+  display:flex;justify-content:center;
+}
+.s2-wrap{width:min(100%,1000px)}
+@media (min-width:640px){.s2-wrap{width:min(100%,86vw,1000px)}}
+@media (min-width:1024px){.s2-wrap{width:min(100%,73vw,1000px)}}
+.s2{position:relative;width:100%;aspect-ratio:953/764;direction:ltr}
+.s2-lay{position:absolute;height:auto;display:block}
+.s2-laceframe{left:34.523%;top:12.827%;width:65.477%;z-index:1;--depth:.18}
+.s2-venue    {left:0%;     top:28.796%;width:41.238%;z-index:3;container-type:inline-size;
+              text-decoration:none;--depth:.45;filter:drop-shadow(0 10px 18px rgba(0,0,0,.35))}
+.s2-lily     {left:12.172%;top:0%;     width:22.560%;z-index:2;--depth:.52;  /* behind the polaroid and the bow */
+              filter:drop-shadow(0 8px 14px rgba(0,0,0,.3))}
+.s2-dahlia   {left:29.289%;top:74.644%;width:22.560%;z-index:4;  /* +4%/+2% off the
+              Canva position, to clear the polaroid caption */
+              --depth:.80;
+              filter:drop-shadow(0 8px 14px rgba(0,0,0,.3))}
+.s2-bow      {left:24.659%;top:23.429%;width:17.943%;z-index:5;--depth:.58}   /* tied to the lily stem */
+
+/* the photo must fill its slot: without this the img draws at its natural
+   275px and the whole polaroid sits too small against the other layers */
+.s2-venue img{width:100%;height:auto;display:block}
+
+.s2-nav{
+  display:block;                 /* rotate() is ignored on an inline box */
+  /* centred on the polaroid’s white strip; the dahlia was moved rather than
+     the text, so the ink is 100% on white and clear of the flower */
+  position:absolute;right:15%;bottom:10%;width:62%;
+  font-family:"Gveret Levin",var(--heb);
+  font-size:7.76cqw;color:#23201E;
+  text-align:center;transform:rotate(-9deg);transform-origin:50% 50%;direction:rtl;
+}
+
+/* the live text. Every number below is measured off the reference design:
+   the card is 51.543% x 62.512% of the section, rows are placed by their ink
+   centre as a % of the card, columns by their ink centre as a % of card width. */
+.s2-card{
+  position:absolute;left:41.715%;top:21.271%;width:51.543%;height:62.512%;z-index:2;
+  direction:rtl;color:#2F3B49;font-family:var(--heb);font-weight:500;
+  container-type:inline-size;--depth:.18;   /* rides the lace frame */
+}
+.s2-row{position:absolute;left:0;right:0;transform:translateY(-50%);
+  text-align:center;line-height:1;white-space:nowrap}
+.s2-col{position:absolute;transform:translate(50%,-50%);text-align:center;line-height:1;white-space:nowrap}
+/* one type size for the whole card, with a floor so phones stay readable */
+.s2-row,.s2-col{--s2t:max(4.25cqw,8.6px);font-size:var(--s2t)}
+
+/* names: ink segments land at 36.78 / 48.90 / 58.73 % of card width,
+   the group spanning 32.20..61.19 (centre 46.70, hence the 6.6% right pad) */
+.s2-names{top:15.37%;display:flex;align-items:center;
+  justify-content:center;gap:1.10em;padding-right:3.22%}
+.s2-names img{width:1.595em;height:auto}
+
+.s2-r2{top:22.90%}
+.s2-r3{top:27.90%}
+
+/* the two icons, both centred on one line at 46.7% of the card */
+/* both icons share one baseline at 52.3% so they clear the labels evenly,
+   and each is centred on the label beneath it */
+.s2-ico{position:absolute;translate:50% -100%;height:auto}
+.s2-ico-r{top:50.97%;right:24.80%;width:15.79%}   /* glasses, over קבלת פנים */
+.s2-ico-l{top:50.97%;right:74.90%;width:15.99%}   /* rings,   over חופה וקידושין */
+
+.s2-lbl-r{top:57.75%;right:24.80%}
+.s2-lbl-l{top:57.75%;right:74.90%}
+/* Latin numerals run ~10% wide in this face next to the Hebrew; pull them back
+   so 11:30 keeps the reference ratio against the label above it */
+.s2-num-r{top:62.34%;right:25.71%;font-size:calc(var(--s2t)*.905)}
+.s2-num-l{top:62.34%;right:74.80%;font-size:calc(var(--s2t)*.905)}
+
+.s2-r6{top:70.00%}
+
+.s2-p1r{top:77.25%;right:15.59%}
+.s2-p1l{top:77.25%;right:83.30%}
+.s2-p2r{top:82.25%;right:15.99%}
+.s2-p2l{top:82.25%;right:83.81%}
+.s2-p3r{top:87.25%;right:16.09%}
+.s2-p3l{top:87.25%;right:83.81%}
+
+/* entrance: layers settle, then the words arrive */
+.s2-card .w{display:inline-block}
+#invite2.is-in .s2-lay{animation:s2in .85s cubic-bezier(.16,1,.3,1) var(--d,0s) both}
+#invite2.is-in .s2-ico{animation:wordin .55s cubic-bezier(.16,1,.3,1) .62s both}
+#invite2.is-in .s2-card .w{animation:wordin .5s cubic-bezier(.16,1,.3,1) both;
+  animation-delay:calc(var(--i,0)*38ms + 420ms)}
+@keyframes s2in{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes wordin{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+
+/* ---- below the scene ---- */
+.when-line{
+  font-family:var(--heb);font-size:clamp(16px,4.7vw,19px);
+  letter-spacing:.05em;text-align:center;color:var(--ink);margin:12px 0 0;
+}
+.where-line{
+  font-family:var(--heb);font-size:clamp(14px,4.1vw,16px);
+  letter-spacing:.1em;text-align:center;color:var(--muted);margin:5px 0 0;
+}
+.script-line{
+  font-family:var(--heb);font-weight:300;
+  font-size:clamp(25px,7.4vw,33px);line-height:1.25;
+  text-align:center;color:var(--ink);margin:18px 0 0;
+}
+/* ================= section 3 — the dress code =================
+   Every placement below was derived from the layout export and verified to
+   account for 100% of its opaque pixels. The doily's flat pale centre is the
+   text container; the three lines sit on their measured ink centres. */
+#dress{
+  direction:rtl;background:var(--grain),var(--wine);
+  padding:calc(var(--sgap)/2) clamp(8px,2vw,24px);
+  display:flex;justify-content:center;
+}
+/* the doily is 50.23% of this box, the lace frame 65.477% of section 2's, so
+   1.3035x section 2's width puts the two focal shapes at the same size */
+.s3-wrap{width:min(100%,1304px)}
+@media (min-width:1024px){.s3-wrap{width:min(100%,95vw,1304px)}}
+.s3{position:relative;width:100%;aspect-ratio:1736/1171;direction:ltr}
+.s3-lay{position:absolute;height:auto;display:block}
+
+.s3-roses   {left:0.000%; top:8.454%; width:25.806%;z-index:1;--depth:.18}
+/* the crochet doily: its flat centre disk (21.33% / 21.95% / 57.34% x 56.47% of the
+   image) is made to coincide with the text card */
+.s3-doily   {left:18.34%;top:-7.17%;width:58.77%;z-index:2;--depth:.38}
+.s3-photo3  {left:60.714%;top:35.525%;width:39.286%;z-index:3;
+             container-type:inline-size;text-decoration:none;--depth:.62;
+             filter:drop-shadow(0 10px 18px rgba(0,0,0,.35))}
+.s3-photo3 img{width:100%;height:auto;display:block}
+/* caption on the polaroid's white strip: measured centre x 43.7%, y ~80%,
+   and the print tilts +10.9deg (clockwise; the venue print is -9deg) */
+.s3-nav{
+  display:block;
+  position:absolute;right:25.3%;bottom:14.7%;width:62%;
+  font-family:"Gveret Levin",var(--heb);
+  font-size:6.25cqw;color:#23201E;
+  text-align:center;transform:rotate(10.9deg);transform-origin:50% 50%;direction:rtl;
+}
+/* (the flourish under the text was removed) */
+.s3-bloom   {left:44.62%;top:20.67%;width:6.5%;z-index:3;--depth:.38}
+.s3-hibA    {left:11.924%;top:41.247%;width:15.956%;z-index:4;--depth:.80;
+             filter:drop-shadow(0 8px 14px rgba(0,0,0,.28))}
+.s3-hibB    {left:65.611%;top:13.749%;width:18.606%;z-index:4;--depth:.80;
+             filter:drop-shadow(0 8px 14px rgba(0,0,0,.28))}
+.s3-blossom {left:15.783%;top:50.043%;width:21.025%;z-index:5;--depth:1;
+             filter:drop-shadow(0 8px 14px rgba(0,0,0,.28))}
+
+/* the live text, on the doily's pale centre */
+.s3-card{
+  position:absolute;left:30.876%;top:12.297%;width:33.698%;height:49.872%;
+  z-index:6;direction:rtl;color:#2F3B49;font-family:var(--heb);font-weight:500;
+  container-type:inline-size;--depth:.38;   /* rides the doily */
+}
+.s3-row{position:absolute;left:0;right:0;transform:translateY(-50%);
+  text-align:center;line-height:1;white-space:nowrap;font-size:var(--s3t)}
+.s3-row{--s3t:max(7.1cqw,10px)}
+.s3-l1{top:36.30%}
+.s3-l2{top:46.75%}
+.s3-l3{top:55.31%}
+
+@media (prefers-reduced-motion:no-preference){
+  #dress.will-in .s3-lay,#dress.will-in .s3-card .w{opacity:0}
+}
+#dress.is-in .s3-lay{animation:s2in .85s cubic-bezier(.16,1,.3,1) var(--d,0s) both}
+#dress.is-in .s3-card .w{animation:wordin .5s cubic-bezier(.16,1,.3,1) both;
+  animation-delay:calc(var(--i,0)*38ms + 400ms)}
+.s3-card .w{display:inline-block}
+
+/* ================= footer — the countdown =================
+   sized off the reference: cap height of the numbers is the unit, with the
+   labels at 0.29x and the row running ~6x the number size wide. */
+.cdown{
+  --n:clamp(40px,8vw,80px);
+  background:#F8F6F0;color:#373533;
+  direction:ltr;text-align:center;
+  padding:calc(var(--sgap)/2) 16px calc(var(--n)*1.0);
+}
+.cdown-locket{
+  display:block;margin:0 auto calc(var(--n)*0.22);
+  width:min(80%,calc(var(--n)*5.2));height:auto;
+}
+.cdown-head{
+  font-family:"Luxurious Script",var(--script),cursive;
+  font-size:calc(var(--n)*0.86);line-height:1.1;color:#14110F;
+  margin:0 0 calc(var(--n)*0.30);font-weight:400;
+}
+.cdown-row{
+  display:flex;align-items:flex-start;justify-content:center;
+  gap:calc(var(--n)*0.06);
+}
+.cdown-unit{display:flex;flex-direction:column;align-items:center;
+  min-width:calc(var(--n)*1.62)}   /* equal columns -> evenly spaced colons */
+.cdown-num,.cdown-sep{
+  font-family:"Playfair Display SC",var(--display),Georgia,serif;
+  font-size:var(--n);line-height:1;
+  font-variant-numeric:tabular-nums lining-nums;
+}
+.cdown-lbl{
+  font-family:"Playfair Display SC",var(--display),Georgia,serif;
+  font-size:calc(var(--n)*0.29);line-height:1;letter-spacing:.06em;
+  margin-top:calc(var(--n)*0.26);color:#373533;
+}
+.cdown-cal{
+  display:inline-block;margin-top:calc(var(--n)*0.95);
+  font-family:"Playfair Display SC",var(--display),Georgia,serif;
+  font-size:max(calc(var(--n)*0.3),13px);letter-spacing:.08em;line-height:1;
+  color:#373533;text-decoration:none;
+  padding:.95em 1.7em;border:1px solid #373533;border-radius:999px;
+  -webkit-tap-highlight-color:transparent;
+  transition:background .3s ease,color .3s ease,scale .3s cubic-bezier(.22,1,.36,1);
+}
+@media (hover:hover) and (pointer:fine){.cdown-cal:hover{background:#373533;color:#F8F6F0}}
+.cdown-cal:active{scale:.97;transition-duration:.1s}
+.cdown-num.tickin{animation:tickin .36s cubic-bezier(.16,1,.3,1)}
+@keyframes tickin{from{transform:translateY(-3px);opacity:.55}to{transform:none;opacity:1}}
+.cdown{opacity:1}
+/* ---- the two polaroid links: a soft lift on hover, a press on tap.
+   Uses the independent `scale` property so the entrance animation's
+   `transform:none` can't cancel it. ---- */
+.s2-venue,.s3-photo3{-webkit-tap-highlight-color:transparent;
+  transition:scale .4s cubic-bezier(.22,1,.36,1),filter .4s cubic-bezier(.22,1,.36,1)}
+@media (hover:hover) and (pointer:fine){
+  .s2-venue:hover,.s3-photo3:hover,.s2-venue:focus-visible,.s3-photo3:focus-visible{
+    scale:1.025;filter:drop-shadow(0 16px 24px rgba(0,0,0,.4))}
+}
+.s2-venue:active,.s3-photo3:active{scale:.985;transition-duration:.12s;
+  filter:drop-shadow(0 6px 10px rgba(0,0,0,.3))}
+@media (prefers-reduced-motion:reduce){.s2-venue,.s3-photo3{transition:none}}
+
+@media (prefers-reduced-motion:no-preference){
+  .cdown.will-in .cdown-locket,
+  .cdown.will-in .cdown-head,
+  .cdown.will-in .cdown-row,
+  .cdown.will-in .cdown-cal{opacity:0}
+  .cdown.is-in .cdown-locket{animation:cdin 1s cubic-bezier(.22,1,.36,1) .04s both}
+  .cdown.is-in .cdown-head  {animation:cdin .9s cubic-bezier(.22,1,.36,1) .2s both}
+  .cdown.is-in .cdown-row   {animation:cdin .9s cubic-bezier(.22,1,.36,1) .34s both}
+  .cdown.is-in .cdown-cal   {animation:cdin .9s cubic-bezier(.22,1,.36,1) .48s both}
+}
+@keyframes cdin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.rule-orn{display:flex;align-items:center;justify-content:center;gap:10px;margin:34px 0 24px}
+.rule-orn .rule{height:1px;flex:1;max-width:84px;background:var(--rule)}
+.rule-orn .dia{width:5px;height:5px;transform:rotate(45deg);background:var(--wax-deep)}
+
+.schedule{border-top:1px solid var(--rule)}
+.row{display:flex;align-items:baseline;gap:12px;padding:14px 2px;border-bottom:1px solid var(--rule)}
+.row .label{font-family:var(--heb);font-size:17px;color:var(--ink);white-space:nowrap}
+.row .leader{flex:1;border-bottom:1px dotted var(--rule);transform:translateY(-4px)}
+.row .time{font-family:var(--ui);font-size:17px;font-weight:600;color:var(--navy);font-variant-numeric:tabular-nums}
+
+.actions{display:flex;flex-direction:column;gap:10px;margin-top:24px}
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:9px;padding:14px 18px;
+  font-family:var(--heb);font-size:16px;background:var(--navy);color:var(--paper);
+  text-decoration:none;transition:background .25s ease;
+}
+.btn:hover{background:var(--navy-mid)}
+.btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
+.btn svg{width:15px;height:15px;flex:none}
+
+.contact{text-align:center;margin-top:24px;display:flex;flex-direction:column;gap:6px}
+.contact .cap{font-family:var(--heb);font-size:14px;color:var(--muted)}
+.contact a{
+  font-family:var(--ui);font-size:15px;color:var(--navy);text-decoration:none;
+  border-bottom:1px solid rgba(110,145,172,.5);padding-bottom:1px;direction:ltr;display:inline-block;
+}
+.back{display:block;margin:26px auto 0;font-family:var(--ui);font-size:12px;letter-spacing:.14em;color:var(--muted)}
+.back:hover{color:var(--navy)}
+.tbd{border-bottom:1px dashed var(--wax-deep);padding-bottom:1px}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
+  .ly img{transform:none!important}
+}
+
+/* ================= phone layout (max-width 640px) =================
+   Below 640px the two compositions restack: the framed text sits centred
+   and nearly full-width, with the florals and the polaroid above and below.
+   Anything printed on a sheet keeps its measured position relative to that
+   sheet, so the text, flourish and bloom still sit exactly on their frames. */
+@media (max-width:640px){
+  /* --- the invitation, after the reference: dahlia tucked BEHIND the frame's
+         top-left corner, polaroid over the bottom edge, the lily mirrored to
+         its right with the stem running behind the print, bow at its foot.
+         Sizes and offsets are read off the reference as fractions of the
+         frame's width. --- */
+  .s2{aspect-ratio:100/142}
+  .s2-laceframe{left:7.5%;top:6.70%;width:85%}
+  .s2-card{left:16.84%;top:12.894%;width:66.91%;height:45.82%}
+  .s2-dahlia{left:-2.36%;top:0%;width:29.5%;z-index:0}
+  .s2-venue {left:20.5%;top:54.65%;width:53.4%}
+  .s2-lily  {left:72.3%;top:66.83%;width:26.4%;scale:-1 1}
+  .s2-bow   {left:18.1%;top:91.97%;width:22.4%}
+  .s2-nav{font-size:7.26cqw}   /* keeps the two link captions the same size here */
+
+  /* --- the dress code, after the reference: the crochet doily (v2) with the
+         text on its flat centre disk (measured: 57.3% of its width, centred),
+         one hibiscus tucked behind its left edge, the blossom in front below
+         it, the polaroid over the lower right. No roses, second hibiscus or
+         flourish in this arrangement. --- */
+  .s3{aspect-ratio:100/106}
+  .s3-roses,.s3-hibB,.s3-flourish{display:none}
+  .s3-doily   {left:12.94%;top:0%;width:75.6%}
+  .s3-card    {left:29.07%;top:15.95%;width:43.35%;height:41.03%}
+  .s3-bloom   {left:45.99%;top:21.91%;width:9.5%}
+  .s3-hibA    {left:-1.5%;top:36.79%;width:18.5%;z-index:1}
+  .s3-blossom {left:3.41%;top:49.62%;width:26.8%}
+  .s3-photo3  {left:50.8%;top:46.89%;width:50.7%}
+  .s3-row{--s3t:max(6.6cqw,10px)}
+  .s3-l1{top:36.6%} .s3-l2{top:45.9%} .s3-l3{top:53.5%}
+  .s3-nav{font-size:7.65cqw;bottom:12%}   /* same rendered size as the Waze caption */
+}
+</style>
+<style id="cursor-cupid">
+/* Flying Cupid animated cursor - https://www.cursors-4u.com/cursor/flying-cupid
+   (self-contained: 22 inline frames, no scripts, no external requests) */
+@keyframes cursor-anim {
+  0.00% { cursor: url("data:image/webp;base64,UklGRk4AAABXRUJQVlA4TEEAAAAvH8AHEB8gEEjSn3oNAUHRfasJCIruW23+A/BXgaLatqn3Qwb6CCOSCHreMzWO6P8ENNMTDjyHDguGul1tMIfvBgA=") 0 0, auto; }
+  38.83% { cursor: url("data:image/webp;base64,UklGRooAAABXRUJQVlA4TH4AAAAvH8AHEE+gmJEkaA6A+Q3hWi7LsqwGgQBFWG+aVRSykQTtA7AWC3huh3BcN/8BACAOz6vW/KTh2G1sCoxi227yf8o+1HUXkIkBJDBoQQIKMH1TDET0fwI6oVHRgJKiASUls4A4gC4QEUWFHXqRq+5DV7Hmb0+Wn5xbqceTFgE=") 0 0, auto; }
+  41.75% { cursor: url("data:image/webp;base64,UklGRs4AAABXRUJQVlA4TMIAAAAvH8AHEHegKJKk5oKDfDhHSrKAHn4UNhQEANk4FW4F/SRTRhk2RW0bSZWGxrxvfANtAB3LY+c/AAAA4cOHL7D1PYfX7adNYiYviwSEsFFjs4Db1tbe5Dl2OVJm+l9e4O+YANEiJsgtU+SOmhHCBMilB7AY5nukASL6PwERWGVQCVUaVEKVBtOC+KpUIrpUUSh7VoAhe0BuU7vbnbDPZ2Y+ZjAhaswJDVZ7DGquYeZbptnIpq4/krVf0LJh18VnZi7+MA==") 0 0, auto; }
+  44.66% { cursor: url("data:image/webp;base64,UklGRvIAAABXRUJQVlA4TOUAAAAvH8AHEIegqLaViAzjmjJ0JBQNnDWCa481FLSRpBxYQHnn7w2xhxdAaiNJbTBt0CPV0QyhVaZIKaP5DwAIH3z4FE2clByor1OPs8rdT2+XX2fJMICKKEW9uwyQ3EZyJE3bnO1qs/X/547LXHOXIvo/ATd6MSNlUiZlUnA9kaJveiEjmrQ/dpCk/QSOvas3M/fziQ+5OxzqnjW92CPt2g/dnUnrFzBTYcAFFBgzI5HWuoawZTn1x69tzWsPhGlOrUt4LyG898JA772SOezpC27G1PIGNrVgGWBRp1blZMsZFnw55fyvAA==") 0 0, auto; }
+  47.57% { cursor: url("data:image/webp;base64,UklGRhgBAABXRUJQVlA4TAsBAAAvH8AHEI+gJrKdKBrulDETj/ihRcMtgZrBhqJIkpoLFqI8vGIi/3kiIKmNbCXiaIP+I1IqoAvCQ82MTBnnPwAgfPDhUzTllMaJ2jjlOLPd/fR65Q2RGAZQEb5Uze7dYYDkNpIjqX12mZ6pzf//ts1krTsrIvo/AQPeeZjoJrqJbqKbCGmSrr7wj+t5kpqGCemz+gKOOkltwIfP6utC9U1zYPCAQ1KVXX0631Q7h7R6SFULYTRJC2AbQdhCuzSCsIUJy0ghBTAtZJZGBDPnlDeFlVM2Sc1CmAtk0y61LSybdoe2x2BZ2h2sWVBeJA9b8eyay9USMJIdOqwjrA5zubA4ZhWIGFf8dpbE/xcA") 0 0, auto; }
+  50.49% { cursor: url("data:image/webp;base64,UklGRkwBAABXRUJQVlA4TEABAAAvH8AHEJegKJKk5jQk4IkZPCIKCTkL4E1hQ3EkSclJChoeYfsbngRgSmxbiRi2wf4Tlc1wSIPaTFaO8x8AED748Ck0/pTAieoY+Rij3f3kcrnrbGIYQIkwS515xB7eHQZIbiM5kmqqczrbjcnN/7+2TdWsOysi+j8BhfxwqXxM9IrDUiW6hF6ciQ7xQnpX6UD0qfvdV8mOcUQRUsO2J16oIhWyNGxP4LFl7IgESl7dngfaQqqubN+ePCRt8pBX85bhZPND6xDbQ9pk7CqeTYQkA3zEUQ/ciEMHoQ64UfEFSQZNK+AyFizYtzCwn5dR3dbd4pLCDamJYYXFNUkxyqt1WVxTQkxerQO+SFOCh1frspgrjwzGhju5pA/rkTFqbrixJFwYXeO1+w3uCcN64KM09WHQCuGTxPXbnTwdJPE/BA==") 0 0, auto; }
+  53.40% { cursor: url("data:image/webp;base64,UklGRk4BAABXRUJQVlA4TEEBAAAvH8AHEI+gJrKdKBrulDETj/ihRcMtgZrBhqJIkpoLFqI8vGIi/3kiIKmNbCXiaIP+I1IqoAvCQ82MTBnnPwAgfPDhUzTllMaJ2jjlOLPd/fR65Q2RGAZQEb5Uze7dYYAlSXbbhgJAPCZJMO5/Wybn75mI/k/AQP/iIfFl8mXyZfJlcqmp4P7kg3667ZM233vtQ0LPthfw3JIegQN9ONteB25vmmFT6MDQLzzVzXi3SCWaujvOJ1sclk9o21M3C7tE9LuZphYgKoGfQRTaYYD4CUQhEQtqAe+sQFhYKI3DuEZmPy/VM+LGultCbVHQW+QVlnDSVo1UYL63hFOHNkUqUO8Qi04dokUqUOd+dylhPypQp2sjfemR16NCdSYuPVg6XKhh9dL4gLFDXg+i6lSnzyC7QotJiUuPkX6aVfbX/q8A") 0 0, auto; }
+  56.31% { cursor: url("data:image/webp;base64,UklGRmQBAABXRUJQVlA4TFcBAAAvH8AHEJegKJKk5jQk4IkZPCIKCTkL4E1hQ3EkSclJChoeYfsbngRgSmxbiRi2wf4Tlc1wSIPaTFaO8x8AED748Ck0/pTAieoY+Rij3f3kcrnrbGIYQIkwS515xB7eHQZZkm3HbUOBEB5AUsPz2/9qAQEekv9zI/o/ARvxw1vix8SKz47ElOtFl/q3D8SEv5DeSRKAx0jMpTGuGH1tMekjwKPfEtLg6vEXSkgTxDa4nsDjCu9wKSa3gOs50OVSMsX69eQh6ZK5LGVb2T9cNszf4NdDupTpEhZLuKQMWMHQd2AZHxoIfQOWSdiBpAxaOQFT5iA7Q5tjp29H0Sds4ewOk+SWkZbYTzhMVfIiSxna2mGqAV4tZSgr2CHVAHNLGUqL1SObYpSh1Lk7cYTt5yhT1LCpG0fARDEVTd1vcA/Yz4EVqZb6Hew6wa1K2NTtTnzcJdHP/d8BAA==") 0 0, auto; }
+  59.22% { cursor: url("data:image/webp;base64,UklGRlIBAABXRUJQVlA4TEUBAAAvH8AHEI+gJrKdKBrulDETj/ihRcMtgZrBhqJIkpoLFqI8vGIi/3kiIKmNbCXiaIP+I1IqoAvCQ82MTBnnPwAgfPDhUzTllMaJ2jjlOLPd/fR65Q2RGAZQEb5Uze7dYZBl23bbNhII4bHJgjH/2RbSqd/nRPR/Ah60X/xI/DL5ZfLL5JfJpKpgf+mbBpx90uqn1wnanV/A+0w6Au1oj+78Gnh+qIZVAW39ow3e6ml8aqQcVf2AHSyTM4Z5pLZJPd96mukS0e4uVDUDUQj8CSJThwHiDxCZROyoGbxzAGFmJ1eGcY2FftuLM+LG0e2h1sjoLZYD9nDVWoyUYbu3h2uDukbKUO4Qu64NokbKULZ2d89hG2Uo67UXbW+xHKNMcSMuPdkbXChh8dLrCa8GyzGIomtZf4LFA2qsSlx6vmjTRaW/9n8LAA==") 0 0, auto; }
+  62.14% { cursor: url("data:image/webp;base64,UklGRmQBAABXRUJQVlA4TFcBAAAvH8AHEJegKJKk5jQk4IkZPCIKCTkL4E1hQ3EkSclJChoeYfsbngRgSmxbiRi2wf4Tlc1wSIPaTFaO8x8AED748Ck0/pTAieoY+Rij3f3kcrnrbGIYQIkwS515xB7eHQZZkm3HbUOBEB5AUsPz2/9qAQEekv9zI/o/ARvxw1vix8SKz47ElOtFl/q3D8SEv5DeSRKAx0jMpTGuGH1tMekjwKPfEtLg6vEXSkgTxDa4nsDjCu9wKSa3gOs50OVSMsX69eQh6ZK5LGVb2T9cNszf4NdDupTpEhZLuKQMWMHQd2AZHxoIfQOWSdiBpAxaOQFT5iA7Q5tjp29H0Sds4ewOk+SWkZbYTzhMVfIiSxna2mGqAV4tZSgr2CHVAHNLGUqL1SObYpSh1Lk7cYTt5yhT1LCpG0fARDEVTd1vcA/Yz4EVqZb6Hew6wa1K2NTtTnzcJdHP/d8BAA==") 0 0, auto; }
+  65.05% { cursor: url("data:image/webp;base64,UklGRlIBAABXRUJQVlA4TEUBAAAvH8AHEI+gJrKdKBrulDETj/ihRcMtgZrBhqJIkpoLFqI8vGIi/3kiIKmNbCXiaIP+I1IqoAvCQ82MTBnnPwAgfPDhUzTllMaJ2jjlOLPd/fR65Q2RGAZQEb5Uze7dYZBl23bbNhII4bHJgjH/2RbSqd/nRPR/Ah60X/xI/DL5ZfLL5JfJpKpgf+mbBpx90uqn1wnanV/A+0w6Au1oj+78Gnh+qIZVAW39ow3e6ml8aqQcVf2AHSyTM4Z5pLZJPd96mukS0e4uVDUDUQj8CSJThwHiDxCZROyoGbxzAGFmJ1eGcY2FftuLM+LG0e2h1sjoLZYD9nDVWoyUYbu3h2uDukbKUO4Qu64NokbKULZ2d89hG2Uo67UXbW+xHKNMcSMuPdkbXChh8dLrCa8GyzGIomtZf4LFA2qsSlx6vmjTRaW/9n8LAA==") 0 0, auto; }
+  67.96% { cursor: url("data:image/webp;base64,UklGRmYBAABXRUJQVlA4TFkBAAAvH8AHEJegKJKk5jQk4IkZPCIKCTkL4E1hQ3EkSclJChoeYfsbngRgSmxbiRi2wf4Tlc1wSIPaTFaO8x8AED748Ck0/pTAieoY+Rij3f3kcrnrbGIYQIkwS515xB7eHQaIsW3FbWSE+Gjx8vP7rxYM8qSB+yL6PwEL8eMl8TMx46M9MeR606T24x0x4G+kT5IE4NETY6mPK3p/Swx6D/Bol4TUuVr8jRLSALF0rhfwvMIbXIrBJeB6dXS5lEwxf714SrpkLkvZZtYvl3XzDX49pUuZJmExhV9SBqxg6A5c2ToGQjdgnhNWZBKgmRMwz1jhq42x0rrKADZxNodbm5GmWE84MK+yIksZ9rkDqx5UWcpQZrBDqoGblDKUPWaPbIpehlKnjrD1BHDLFO3YxBEwUExFE0e06wngVqRa6reNOKK/6myqhA08OGJwlUQ7sD1gG7jzd4+N+NcA") 0 0, auto; }
+  70.87% { cursor: url("data:image/webp;base64,UklGRk4BAABXRUJQVlA4TEIBAAAvH8AHEIegKJLUCA03T8zgET/xcUvIOxUbagIAaaDDjEdXSoDj9zTAUhrJVvNDG79/9S0V0EXO4FBYhvkPAAAA//8UjTrdmNnJ7czh7qvXkdcJZ2hASfhSLax3H4PDSJLi5gTH6dc5/3TRYzKYjej/BEzY4KkwTAwTw8Qw8ZCAkf2rHwbsfZGSq08ekLr9lHTsRbqDpMOmbj9vtF8kIeCCxPrJbg5Ju+JKFY8ELsgO6sMet34H2EPuh7TL6QphX2vaLjkQzYX+QFq4buQIfSNDXoiGJAd92YwMOXPzx3hHhTRmtRfEh81II24d6RN1MzI0S9FQcVj+EDkbSFEc2hdCUhpIKg5tsU8uWd44tPkbUTcjLeQ0FsU3OjLkTYJ/UDeDDDWY0bv1hqrNyJgli3frA1RJ9O9WbOxqg1cbvNrg1UYD") 0 0, auto; }
+  73.79% { cursor: url("data:image/webp;base64,UklGRkwBAABXRUJQVlA4TD8BAAAvH8AHEIegKLat5GcQZGmlCecegDVDDTUBgDTQYcYjNe5bTwMsNbWtNhQb+J9Y8YAI0puBrDmZ/wAAAPD/T6IJZyijGPkYY7r78uGMMzQgSeilzjxiD+8+BlmSbcdt8wQCj5pf9r9dwgQz/Z8T0f8JuBG/+db4bbJSZ2dyqvh4aMdvTeREfYRvUz9qxUzOtfkHYvaLOFmzjxLHW0Mnz2PUR9qneYK4TZ5v9UXUQSBO3gKe74kUtDTWn29fKmRh67my/UBO+wX1fCl0Do2MtXhCB3J08QIqsjuxI65RaW/kQO3gyiOotLOP/mOeY4MKdscJcuERVJDTji6xPYJKd82BrcP9gqw9QLN1GCukWgFq6zDusdQ1atJh7Gvk9ggq0s7gbq5xoNI+FK5gewRUOmDHK9h8BJW7Rl4Dm8rxsv8wAA==") 0 0, auto; }
+  76.70% { cursor: url("data:image/webp;base64,UklGRl4BAABXRUJQVlA4TFIBAAAvH8AHEH+gKJKcKBruPBMwjR+EnBJ4U9hQEwBIAx1mPLrSwe3vaYClJpLcRoGG+FdqhcCRRQ4E3Ho8/wEAAOD/n6JpZxizOOU4c7r7qikLZ2hASfhSPZx3H0CObW1t8xxGUQNhXHEK0Hz5K5DtbeD3F2aqwJMC1IDXcgeRK/CogsyYYae/iei3QgVE9H8CbKRdyKRyUi1mUjmpFjMAlIJSRsIcEASbi6pWiw1gYcFBKYrKi+1arRYbsC0H1SgKP+PbvqrFBpBBtRKWL+NVqVQtBjBcrYSXzEIqpQwAnY8wIGZ3DMmdUkCUk1I3bAhBOSGlrsnLMsuCxpJ83IrnQyKSSVsw7vNfaCxpsglmJtbAx+3rW67g0oSuP463VfI0R9zHEbtUhEaOGUdM3rsGB5PNI+EVz3Vbk7gVhVxBBx9Nzr68DLDl4/Zt/HUAbO0OAwP9ow==") 0 0, auto; }
+  79.61% { cursor: url("data:image/webp;base64,UklGRkoBAABXRUJQVlA4TD4BAAAvH8AHEIegKLat5GcQZGmlCecegDVDDTUBgDTQYcYjNe5bTwMsNbWtNhQb+J9Y8YAI0puBrDmZ/wAAAPD/T6IJZyijGPkYY7r78uGMMzQgSeilzjxiD+8+BkluJDmSFJ2VGdU65v/fLZE1K+5mEf2fgBvxy7fGr8mZOntGDoqPm7b91gnZqY/wbepHrTgjR23/A3Hmh9itvY8Sx7eG8txGfaR9mhPErfFWX8+ojUBM3t47PgtaGvPPty8VsrD1nFkOyN1+QT1fCp1NI2MuntCBHF28gIrs7tgR56i0N3KgdnDmEVTaWUc/zHMsUMHqOEFOPIIKcrejUyyPoNJVc2DrcL8gaw3QbB3GDKlWgNo6jHtMdY3a6TDWOXJ5BBVpZ3A359hQaR8KV7A8AiodsOIVLD6CylUjr4FFZXvZfxo=") 0 0, auto; }
+  82.52% { cursor: url("data:image/webp;base64,UklGRkoBAABXRUJQVlA4TD0BAAAvH8AHEH+gKJKcKBruPBMwjR+EnBJ4U9hQEwBIAx1mPLrSwe3vaYClJpLcRoGG+FdqhcCRRQ4E3Ho8/wEAAOD/n6JpZxizOOU4c7r7qikLZ2hASfhSPZx3H8DN9k+R8j93je9wj5wC9vkzFaykyOwfd6vgHgrYBojvIlKWCijBnWynB+Q/gxUQ0X+1bdswdMqUHFIDU3pjRnWjvphR3ajvUYFSZY3usT51exuVmd56p+/pVlO1Rj28irbeFKvLi7POWjQk1Ud9Fa4RCanYyXnYRiIrzR+dthFdKTXKQqArpOQeaEA6JFCztsTBHCJqVnnH+8RX7gGICIkLYOvo2PUtzHJvGTgeQpuZpzeYJwtbwMh0eZ7QPuFns7mHeWG3VrjxHGwJ3/WBJ4AHcg4PNcYD2DrOHIGuphIA7/5pAAA=") 0 0, auto; }
+  85.44% { cursor: url("data:image/webp;base64,UklGRh4BAABXRUJQVlA4TBEBAAAvH8AHEIegKLat5GcQZGmlCecegDVDDTUBgDTQYcYjNe5bTwMsNbWtNhQb+J9Y8YAI0puBrDmZ/wAAAPD/T6IJZyijGPkYY7r78uGMMzQgSeilzjxiD+8+BkhuIzmSqmuyqt3M5P7/u+Ny3V2K6P8ELLRvXjrfJo18t0Ly5kN/vGeBJHfVm5qtQnx+S1rFF/lwU9rnS0e5Zb91izh5JtAKr54uCX3aak89mIk9ZtUxn0bVQfDQma02AEeIVT4xEGuiMwdqgCUG64iXs4LV8QazAp8GWpO66hzYA7aCmWsDnT1g1DRQe8DYWgX5JGCsJXsj2zQYbM4iUmMolFz2BjkdsGIFF/dGzlXbrIGLymPZPw8A") 0 0, auto; }
+  88.35% { cursor: url("data:image/webp;base64,UklGRuwAAABXRUJQVlA4TOAAAAAvH8AHEGegqJEkZcHD6iGT645Owr0vZ0NNAKAJ8nFTgv5lvAMBJmoCAGkYEclCNDrQYjoK+Dv/AQAA4P+foMkzasLx68xy9wkRzOyZUnVwW1t7m4gM6nBHzizABj4/msC4Jsgi1eAJOKyRk45G0Vp8Ig0Q0f8JKDLXVsLJc2onnDyn9pE7lKzhUMuz1nCgWPVu2hr+am1aUmtrXiklpNaaI36WwaGULkJKbKQEZaEhEUknyiJKkcLiMPIpj7C4TwE0Vj7tGEbBHhPBbgGtRBRG0EGNNhuIreLcFhqkGMP+Lw==") 0 0, auto; }
+  91.26% { cursor: url("data:image/webp;base64,UklGRsYAAABXRUJQVlA4TLoAAAAvH8AHEF+gJgCQhhGN9KTYYAB/raEmAAjG+HQTXIN9ezWgJgCQhhGR1KTYoAH8nf8AAADw/6emzh5PLxtTftS0e4+IYGZw29ram3yuYuXfnbvMAGzACL/0yRP80GdYwDCBxRqI0vt9l7BARP8noBBaR8gtS25r6maT29z6LbbmlYMqF1vtQFE6se/jCKxOAkfkY3JiJzJqDFRPSGNwIWevqW2lAXidxa7hCcJ8A+fdGWynCTySOxBh/w4=") 0 0, auto; }
+  94.17% { cursor: url("data:image/webp;base64,UklGRpwAAABXRUJQVlA4TI8AAAAvH8AHEFegIJIN6iGa9FL8JRBADUWxbVAPO3n032vw76ABNQGANIyIpOYiwkYL+Dv/AQAA/n/mas34uo6rd9w9qkKEgU1t7U1CL1t+JsbEAR6QgIRqABxwEML2C82jCYjo/wRYQ12EBPkICfIRaQ1wAmwjdZhqdxGtw96foxH1+WMlGdBh6IlWNKEN7Y/9LwA=") 0 0, auto; }
+  97.09% { cursor: url("data:image/webp;base64,UklGRk4AAABXRUJQVlA4TEEAAAAvH8AHEB8gEEjSn3oNAUHRfasJCIruW23+A/BXgaLatqn3Qwb6CCOSCHreMzWO6P8ENNMTDjyHDguGul1tMIfvBgA=") 0 0, auto; }
+}
+html { animation: cursor-anim 5150ms step-end infinite; }
+a,button,input,textarea,label,[role=button],select,option{cursor:inherit!important}
+</style>
+
+<main>
+  <!-- ======== screen 1 ======== -->
+  <section id="stage">
+    <p class="stage-hello">A letter, just for you</p>
+    <div class="env-wrap">
+      <div class="env-stage">
+        <button class="envelope" id="env" type="button" aria-label="פתיחת ההזמנה">
+          <span class="e-layer e-body"><img src="el/envelope.webp" alt=""></span>
+          <span class="e-layer e-flap"><img src="el/envelope.webp" alt=""></span>
+          <img class="e-seal" src="el/seal.webp" alt="">
+        </button>
+        <img class="e-fl e-fl-tulips" src="el/tulips.webp" alt="" aria-hidden="true" decoding="async">
+        <img class="e-fl e-fl-peony" src="el/peony.webp" alt="" aria-hidden="true" decoding="async">
+      </div>
+    </div>
+
+    <p class="open-cta">לחצו לפתיחה</p>
+  </section>
+
+  <!-- ======== screen 2 ======== -->
+  <section id="invite" hidden>
+    <div class="wrap">
+
+      <div class="scene" id="scene">
+        <div class="ly ly-back"><img src="el/back.webp" alt="" decoding="async"></div>
+        <div class="ly ly-pa"><img src="el/polaroid-a.webp" alt="William ונטע" decoding="async"></div>
+        <div class="ly ly-pb"><img src="el/polaroid-b.webp" alt="ידיהם של William ונטע" decoding="async"></div>
+        <div class="ly ly-card">
+          <img src="el/card.webp" alt="Neta &amp; William" decoding="async">
+        </div>
+        <div class="ly ly-pocket" aria-hidden="true"><img src="el/back.webp" alt=""></div>
+        <div class="ly ly-rf"><img src="el/record-flowers.webp" alt="" decoding="async"></div>
+        <button class="ly ly-vinyl" id="vinyl" type="button" aria-pressed="false"
+                title="נגנו את השיר" aria-label="נגנו את השיר">
+          <img class="disc" src="el/vinyl.webp" alt="" decoding="async">
+          <svg class="tap" viewBox="0 0 160 160" aria-hidden="true">
+            <path id="arc" d="M 14 80 A 66 66 0 0 0 146 80" fill="none"/>
+            <text><textPath href="#arc" startOffset="50%" text-anchor="middle">tap to play</textPath></text>
+          </svg>
+        </button>
+      </div>
+
+      <audio id="song" src="audio/song.mp3" preload="none" loop></audio>
+
+    </div>
+
+    <section id="invite2">
+      <div class="s2-wrap">
+        <div class="s2">
+          <img class="s2-lay s2-laceframe" src="s2/laceframe.webp" alt="" style="--d:0s" decoding="async">
+
+          <div class="s2-card">
+            <div class="s2-row s2-names">נטע <img src="s2/heart.webp" alt="ו"> וויליאם</div>
+            <div class="s2-row s2-r2">אנו שמחים ונרגשים להזמינכם לחתונתנו שתערך בתאריך</div>
+            <div class="s2-row s2-r3">ב׳ בניסן תשפ״ז התשיעי לאפריל 2027 בחוות אלנבי</div>
+            <img class="s2-ico s2-ico-r" src="s2/drinks.webp" alt="" decoding="async">
+            <img class="s2-ico s2-ico-l" src="s2/rings.webp" alt="" decoding="async">
+            <div class="s2-col s2-lbl-r">קבלת פנים</div>
+            <div class="s2-col s2-num-r">11:30</div>
+            <div class="s2-col s2-lbl-l">חופה וקידושין</div>
+            <div class="s2-col s2-num-l">12:30</div>
+            <div class="s2-row s2-r6">נשמח לראותכם בין אורחינו,</div>
+            <div class="s2-col s2-p1r">הורי החתן,</div>
+            <div class="s2-col s2-p2r">אינס וסלבה</div>
+            <div class="s2-col s2-p3r">וינטרמן</div>
+            <div class="s2-col s2-p1l">הורי הכלה,</div>
+            <div class="s2-col s2-p2l">חיה וירון</div>
+            <div class="s2-col s2-p3l">טל</div>
+          </div>
+
+          <a class="s2-lay s2-venue" id="navLink" href="https://ul.waze.com/ul?venue_id=22806847.228265081.4270&amp;overview=yes"
+             target="_blank" rel="noopener" aria-label="ניווט לחוות אלנבי בוויז" style="--d:.14s">
+            <img src="s2/venue.webp" alt="חוות אלנבי" decoding="async">
+            <span class="s2-nav">לחצו כאן לניווט</span>
+          </a>
+          <img class="s2-lay s2-lily"   src="s2/lily.webp"   alt="" style="--d:.07s" decoding="async">
+          <img class="s2-lay s2-dahlia" src="s2/dahlia.webp" alt="" style="--d:.21s" decoding="async">
+          <img class="s2-lay s2-bow"    src="s2/bow.webp"    alt="" style="--d:.28s" decoding="async">
+        </div>
+      </div>
+    </section>
+
+    <section id="dress">
+      <div class="s3-wrap">
+        <div class="s3">
+          <img class="s3-lay s3-roses"    src="s3/roses.webp"    alt="" style="--d:0s" decoding="async">
+          <img class="s3-lay s3-doily"    src="s3/doily2.webp"    alt="" style="--d:.07s"   decoding="async">
+          <a class="s3-lay s3-photo3" id="inspoLink" href="https://www.pinterest.com/neta28/spring-wedding-inspo-looks/"
+             target="_blank" rel="noopener" aria-label="השראה ללוק לחתונה" style="--d:.14s">
+            <img src="s3/photo3.webp" alt="נטע ווויליאם" decoding="async">
+            <span class="s3-nav">לחצו כאן להשראה</span>
+          </a>
+          <img class="s3-lay s3-bloom"    src="s3/rose.webp"     alt="" style="--d:.17s" decoding="async">
+          <img class="s3-lay s3-hibA"     src="s3/hibiscus.webp" alt="" style="--d:.21s" decoding="async">
+          <img class="s3-lay s3-hibB"     src="s3/hibiscus.webp" alt="" style="--d:.21s" decoding="async">
+          <img class="s3-lay s3-blossom"  src="s3/blossom.webp"  alt="" style="--d:.28s" decoding="async">
+          <div class="s3-card">
+            <div class="s3-row s3-l1">קוד לבוש:</div>
+            <div class="s3-row s3-l2">אביבי וצבעוני</div>
+            <div class="s3-row s3-l3">אפשר להשקיע, זו לא חתונת טבע</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="cdown" id="countdown">
+      <img class="cdown-locket" src="s2/locket.webp" alt="" decoding="async">
+      <p class="cdown-head">The countdown is on!</p>
+      <div class="cdown-row">
+        <div class="cdown-unit"><span class="cdown-num" id="cd-d">0</span><span class="cdown-lbl">Days</span></div>
+        <span class="cdown-sep">:</span>
+        <div class="cdown-unit"><span class="cdown-num" id="cd-h">00</span><span class="cdown-lbl">Hours</span></div>
+        <span class="cdown-sep">:</span>
+        <div class="cdown-unit"><span class="cdown-num" id="cd-m">00</span><span class="cdown-lbl">Minutes</span></div>
+        <span class="cdown-sep">:</span>
+        <div class="cdown-unit"><span class="cdown-num" id="cd-s">00</span><span class="cdown-lbl">Seconds</span></div>
+      </div>
+      <a class="cdown-cal" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=%D7%A0%D7%98%D7%A2%20%26%20%D7%95%D7%95%D7%99%D7%9C%D7%99%D7%90%D7%9D%20%E2%80%93%20%D7%94%D7%97%D7%AA%D7%95%D7%A0%D7%94&amp;dates=20270409T113000/20270409T180000&amp;ctz=Asia%2FJerusalem&amp;location=%D7%97%D7%95%D7%95%D7%AA%20%D7%90%D7%9C%D7%A0%D7%91%D7%99%2C%20%D7%A0%D7%A6%D7%A8%20%D7%A1%D7%99%D7%A8%D7%A0%D7%99&amp;details=%D7%A7%D7%91%D7%9C%D7%AA%20%D7%A4%D7%A0%D7%99%D7%9D%2011%3A30%20%C2%B7%20%D7%97%D7%95%D7%A4%D7%94%20%D7%95%D7%A7%D7%99%D7%93%D7%95%D7%A9%D7%99%D7%9F%2012%3A30%0A%D7%A0%D7%99%D7%95%D7%95%D7%98%20%D7%91%D7%95%D7%95%D7%99%D7%96%3A%20https%3A%2F%2Ful.waze.com%2Ful%3Fvenue_id%3D22806847.228265081.4270%26overview%3Dyes" target="_blank" rel="noopener">Put us in your calendar</a>
+    </footer>
+  </section>
+</main>
+
+<script>
+(function(){
+  var stage  = document.getElementById('stage');
+  var invite = document.getElementById('invite');
+  var env    = document.getElementById('env');
+  var back   = document.getElementById('back');   // removed with the old section
+  var scene  = document.getElementById('scene');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function open(){
+    if(env.classList.contains('is-open')) return;
+    env.classList.add('is-open');
+    stage.classList.add('is-opening');
+
+    var wrap = document.querySelector('.wrap');
+    var back = scene && scene.querySelector('.ly-back');
+
+    if (reduce){
+      stage.hidden = true; invite.hidden = false; window.scrollTo(0,0);
+      if (window.revealS2) window.revealS2();
+      return;
+    }
+
+    /* Once the flap is most of the way open, bring the scene in UNDER the stage,
+       scaled and placed so its open envelope sits exactly where the closed one
+       is. Then let it grow to its real size while the contents lift out of the
+       pocket. The envelope never appears to jump, so the two screens read as
+       one move rather than a cut. */
+    setTimeout(function(){
+      invite.hidden = false;
+      stage.classList.add('is-lifting');     // out of flow, still fully opaque
+      window.scrollTo(0,0);
+      if (scene) scene.classList.add('emerge');
+
+      var aligned = false;
+      if (wrap && back){
+        var a = env.getBoundingClientRect();
+        var b = back.getBoundingClientRect();
+        if (a.width > 0 && b.width > 0){
+          var s  = a.width / b.width;
+          var dx = (a.left + a.width / 2) - (b.left + b.width / 2);
+          var dy = a.top - b.top;
+          wrap.style.transformOrigin = '50% 0';
+          wrap.style.transition = 'none';
+          wrap.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) scale(' + s.toFixed(4) + ')';
+          void wrap.offsetWidth;             // commit before releasing
+          aligned = true;
+        }
+      }
+
+      stage.classList.add('is-leaving');     // the closed envelope cross-fades away
+
+      requestAnimationFrame(function(){
+        if (aligned){
+          wrap.style.transition = 'transform 1.3s cubic-bezier(.3,.7,.1,1)';
+          wrap.style.transform = 'none';
+        }
+        if (scene) scene.classList.remove('emerge');
+      });
+
+      setTimeout(function(){
+        stage.hidden = true;
+        stage.classList.remove('is-lifting', 'is-leaving');
+        if (wrap){ wrap.style.transition = ''; wrap.style.transform = ''; wrap.style.transformOrigin = ''; }
+        if (window.revealS2) window.revealS2();
+      }, 1400);
+    }, 760);
+  }
+
+  function close(){
+    song.pause(); setPlaying(false);
+    invite.hidden = true;
+    stage.hidden = false;
+    stage.classList.remove('is-leaving', 'is-lifting', 'is-opening');
+    env.classList.remove('is-open');
+    var w = document.querySelector('.wrap');
+    if (w){ w.style.transition=''; w.style.transform=''; w.style.transformOrigin=''; }
+    if (scene) scene.classList.remove('emerge');
+    window.scrollTo(0,0);
+  }
+/* the record */
+  var song  = document.getElementById('song');
+  var vinyl = document.getElementById('vinyl');
+  function setPlaying(on){
+    vinyl.classList.toggle('playing', on);
+    vinyl.setAttribute('aria-pressed', on ? 'true' : 'false');
+    var label = on ? 'השהו את השיר' : 'נגנו את השיר';
+    vinyl.setAttribute('aria-label', label);
+    vinyl.title = label;
+  }
+  vinyl.addEventListener('click', function(){
+    if(song.paused){
+      song.volume = 0.85;
+      var p = song.play();
+      if(p && p.then) p.then(function(){ setPlaying(true); }).catch(function(){ setPlaying(false); });
+      else setPlaying(true);
+    } else {
+      song.pause(); setPlaying(false);
+    }
+  });
+  song.addEventListener('ended', function(){ setPlaying(false); });
+
+  env.addEventListener('click', open);
+  if (back) back.addEventListener('click', close);
+
+  /* gentle parallax between the layers */
+  if(!reduce){
+    var depths = [['.ly-back',0],['.ly-pa',-14],['.ly-pb',-9],['.ly-card',-18],['.ly-rf',6],['.ly-vinyl',10]];
+    var nodes = depths.map(function(d){
+      return [scene.querySelector(d[0]), d[1]];
+    }).filter(function(n){ return n[0]; });
+    var ticking = false;
+    function apply(){
+      var r = scene.getBoundingClientRect();
+      var p = (r.top + r.height/2 - window.innerHeight/2) / window.innerHeight; // -1..1
+      p = Math.max(-1.2, Math.min(1.2, p));
+      nodes.forEach(function(n){ if(n[0]) n[0].style.setProperty('--py', (p*n[1]).toFixed(1)+'px'); });
+      ticking = false;
+    }
+    window.addEventListener('scroll', function(){
+      if(!ticking){ ticking = true; requestAnimationFrame(apply); }
+    }, {passive:true});
+    window.addEventListener('resize', apply, {passive:true});
+    apply();
+  }
+
+  /* section 2: wrap each word so it can arrive on its own, then reveal on scroll */
+  var s2 = document.getElementById('invite2');
+  if (s2){
+    var textBox = s2.querySelector('.s2-card');
+    var idx = 0;
+    var walker = document.createTreeWalker(textBox, NodeFilter.SHOW_TEXT, null);
+    var nodes = [], node;
+    while ((node = walker.nextNode())) if (node.nodeValue.trim()) nodes.push(node);
+    nodes.forEach(function(n){
+      var frag = document.createDocumentFragment();
+      n.nodeValue.split(/(\s+)/).forEach(function(tok){
+        if (!tok) return;
+        if (/^\s+$/.test(tok)){ frag.appendChild(document.createTextNode(tok)); return; }
+        var sp = document.createElement('span');
+        sp.className = 'w';
+        sp.style.setProperty('--i', idx++);
+        sp.textContent = tok;
+        frag.appendChild(sp);
+      });
+      n.parentNode.replaceChild(frag, n);
+    });
+
+    window.revealS2 = function(){
+      if (s2.classList.contains('is-in')) return;
+      var r = s2.getBoundingClientRect();
+      if (r.height === 0) return;                       // still hidden
+      if (reduce || r.top < window.innerHeight * 0.85){ s2.classList.add('is-in'); }
+    };
+  
+  /* ---- countdown: 9 April 2027, 11:30 Israel time (UTC+3) ---- */
+  var cdD=document.getElementById("cd-d"), cdH=document.getElementById("cd-h"),
+      cdM=document.getElementById("cd-m"), cdS=document.getElementById("cd-s"),
+      cdSec=document.getElementById("countdown");
+  if (cdD && cdH && cdM && cdS){
+    var cdTarget = new Date("2027-04-09T11:30:00+03:00").getTime();
+    var pad2 = function(n){ return n < 10 ? "0"+n : ""+n; };
+    var put = function(el, value){
+      if (el.textContent === value) return;
+      el.textContent = value;
+      if (reduce) return;
+      el.classList.remove("tickin"); void el.offsetWidth; el.classList.add("tickin");
+    };
+    var cdTick = function(){
+      var left = Math.max(0, cdTarget - Date.now());
+      var sec  = Math.floor(left/1000);
+      put(cdD, String(Math.floor(sec/86400)));
+      put(cdH, pad2(Math.floor(sec%86400/3600)));
+      put(cdM, pad2(Math.floor(sec%3600/60)));
+      put(cdS, pad2(sec%60));
+    };
+    cdTick();
+    setInterval(cdTick, 1000);
+  }
+  /* reveal the footer on scroll, same gate as section 2 */
+  if (cdSec){
+    if (!reduce) cdSec.classList.add('will-in');
+    var revealCd = function(){
+      if (cdSec.classList.contains("is-in")) return;
+      var r = cdSec.getBoundingClientRect();
+      if (r.height === 0) return;
+      if (reduce || r.top < window.innerHeight * 0.92){
+        cdSec.classList.remove("will-in"); cdSec.classList.add("is-in");
+      }
+    };
+    window.addEventListener("scroll", revealCd, {passive:true});
+    window.addEventListener("resize", revealCd, {passive:true});
+    window.revealCd = revealCd; revealCd();
+  }
+  window.addEventListener('scroll', window.revealS2, {passive:true});
+    window.addEventListener('resize', window.revealS2, {passive:true});
+    window.revealS2();
+
+  /* ---- section 3: the dress code ---- */
+  var s3 = document.getElementById('dress');
+  if (s3){
+    if (!reduce) s3.classList.add('will-in');
+    var s3box = s3.querySelector('.s3-card');
+    var k = 0;
+    var w3 = document.createTreeWalker(s3box, NodeFilter.SHOW_TEXT, null);
+    var n3 = [], nn;
+    while ((nn = w3.nextNode())) if (nn.nodeValue.trim()) n3.push(nn);
+    n3.forEach(function(n){
+      var frag = document.createDocumentFragment();
+      n.nodeValue.split(/(\s+)/).forEach(function(tok){
+        if (!tok) return;
+        if (/^\s+$/.test(tok)){ frag.appendChild(document.createTextNode(tok)); return; }
+        var sp = document.createElement('span');
+        sp.className = 'w';
+        sp.style.setProperty('--i', k++);
+        sp.textContent = tok;
+        frag.appendChild(sp);
+      });
+      n.parentNode.replaceChild(frag, n);
+    });
+    var revealS3 = function(){
+      if (s3.classList.contains('is-in')) return;
+      var r = s3.getBoundingClientRect();
+      if (r.height === 0) return;
+      if (reduce || r.top < window.innerHeight * 0.88){
+        s3.classList.remove('will-in'); s3.classList.add('is-in');
+      }
+    };
+    window.addEventListener('scroll', revealS3, {passive:true});
+    window.addEventListener('resize', revealS3, {passive:true});
+    window.revealS3 = revealS3; revealS3();
+  }
+
+  }
+
+})();
+</script>
