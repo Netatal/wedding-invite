@@ -190,10 +190,15 @@ a{color:inherit}
 /* ================= screen 2 — the opened invitation ================= */
 
 #invite{
-  direction:rtl;min-height:100svh;padding:14px 0 0;
+  direction:rtl;
   background:var(--grain),var(--wine);
 }
-.wrap{width:min(470px,100%);margin:0 auto calc(var(--sgap)/2)}
+/* the opened scene fills exactly one screen, so section 2 only appears on scroll.
+   Its bottom padding is the same half-gap every other section uses, and the
+   scene is centred in whatever height is left. */
+.first{min-height:100svh;box-sizing:border-box;display:flex;align-items:center;justify-content:center;
+  padding:14px 0 calc(var(--sgap)/2)}
+.wrap{width:min(470px,100%);margin:0}
 /* on wide screens the scene tracks the reference: ~50% of the viewport,
    with a vh guard so a short window does not force a long scroll.
    470px at the 940px breakpoint, so the two tiers meet without a jump. */
@@ -337,9 +342,10 @@ a{color:inherit}
 /* entrance: layers settle, then the words arrive */
 .s2-card .w{display:inline-block}
 @media (prefers-reduced-motion:no-preference){
-  #invite2.will-in .s2-lay,#invite2.will-in .s2-ico,#invite2.will-in .s2-card .w{opacity:0}
+  #invite2.will-in .s2-lay,#invite2.will-in .s2-ico,#invite2.will-in .s2-card .w,#invite2.will-in .s2-names img{opacity:0}
 }
 #invite2.is-in .s2-lay{animation:s2in .85s cubic-bezier(.16,1,.3,1) var(--d,0s) both}
+#invite2.is-in .s2-names img{animation:wordin .5s cubic-bezier(.16,1,.3,1) 439ms both}   /* between the two names */
 #invite2.is-in .s2-ico{animation:wordin .55s cubic-bezier(.16,1,.3,1) .62s both}
 #invite2.is-in .s2-card .w{animation:wordin .5s cubic-bezier(.16,1,.3,1) both;
   animation-delay:calc(var(--i,0)*38ms + 420ms)}
@@ -621,6 +627,7 @@ a,button,input,textarea,label,[role=button],select,option{cursor:inherit!importa
 
   <!-- ======== screen 2 ======== -->
   <section id="invite" hidden>
+    <div class="first">
     <div class="wrap">
 
       <div class="scene" id="scene">
@@ -645,6 +652,8 @@ a,button,input,textarea,label,[role=button],select,option{cursor:inherit!importa
       <audio id="song" src="audio/song.mp3" preload="none" loop></audio>
 
     </div>
+
+    </div><!-- /first -->
 
     <section id="invite2">
       <div class="s2-wrap">
