@@ -258,7 +258,7 @@ a{color:inherit}
 .ly-vinyl.playing .disc{animation-play-state:running}
 @keyframes spin{to{transform:rotate(360deg)}}
 .tap{position:absolute;left:-30%;top:-30%;width:160%;height:160%;overflow:visible;pointer-events:none;transform:rotate(-16deg)}
-.tap text{font-family:"Playfair Display SC",var(--display);font-size:14px;letter-spacing:1.1px;fill:#FFFFFF}
+.tap text{font-family:"Playfair Display SC",var(--display);font-size:14px;letter-spacing:1.1px;fill:var(--navy)}
 
 /* ================= section 2 — the formal invitation ================= */
 #invite2{
@@ -357,7 +357,7 @@ a{color:inherit}
 @keyframes wordin{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
 
 /* ---- scroll cue: shown on the opened scene until the first scroll ----
-   default = script caption + chevron; ?cue=line swaps in the hairline + dot */
+   script caption + chevron */
 .scroll-cue{
   position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom));z-index:20;
   translate:-50% 0;display:flex;flex-direction:column;align-items:center;gap:2px;
@@ -368,16 +368,10 @@ a{color:inherit}
 .sc-text{font-family:"Luxurious Script",var(--script),cursive;font-size:30px;line-height:1;direction:ltr;
   text-shadow:0 1px 10px rgba(72,0,32,.7)}
 .sc-chev{display:block;width:22px;height:12px;overflow:visible}
-.sc-line{display:none;position:relative;width:1.5px;height:44px;background:rgba(255,243,236,.6)}
-.sc-line i{position:absolute;left:-2px;top:0;width:5px;height:5px;border-radius:50%;background:currentColor}
-html[data-cue="line"] .sc-text,html[data-cue="line"] .sc-chev{display:none}
-html[data-cue="line"] .sc-line{display:block}
 @media (prefers-reduced-motion:no-preference){
   .scroll-cue.is-on .sc-chev{animation:cue-bob 1.9s cubic-bezier(.45,0,.25,1) infinite}
-  .scroll-cue.is-on .sc-line i{animation:cue-dot 2.1s cubic-bezier(.45,0,.25,1) infinite}
 }
 @keyframes cue-bob{0%,100%{translate:0 0;opacity:.45}50%{translate:0 6px;opacity:1}}
-@keyframes cue-dot{0%{translate:0 0;opacity:0}20%{opacity:1}80%{opacity:1}100%{translate:0 39px;opacity:0}}
 
 /* ---- below the scene ---- */
 .when-line{
@@ -665,7 +659,6 @@ a,button,input,textarea,label,[role=button],select,option{cursor:inherit!importa
     <div class="scroll-cue" aria-hidden="true">
       <span class="sc-text">scroll down</span>
       <svg class="sc-chev" viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l9 8 9-8"/></svg>
-      <span class="sc-line"><i></i></span>
     </div>
     <div class="first">
     <div class="wrap">
@@ -782,7 +775,6 @@ a,button,input,textarea,label,[role=button],select,option{cursor:inherit!importa
 
   /* scroll cue: appears once the envelope has finished opening, hides on scroll */
   var cue = document.querySelector('.scroll-cue'), cueReady = false;
-  if (/[?&]cue=line/.test(location.search)) document.documentElement.setAttribute('data-cue','line');
   function cueUpdate(){ if (cue) cue.classList.toggle('is-on', cueReady && window.scrollY < 30); }
   function cueShow(){ setTimeout(function(){ cueReady = true; cueUpdate(); }, 700); }
   window.addEventListener('scroll', cueUpdate, {passive:true});
